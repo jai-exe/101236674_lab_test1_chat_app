@@ -104,7 +104,7 @@
                     <form id="chatForm">
                         <div class="input-group p-1">
                             <input type="text" class="form-control" id="message" placeholder="Enter your message" />
-                            <button class="btn btn-success" type="submit">Send</button>
+                            <button class="btn btn-success">Send</button>
                         </div>
                     </form>
                 </div>
@@ -116,60 +116,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     <script src="/socket.io.socket.io.js"></script>
     <script>
-        const { room } = Qs.parse(location.search, {
-            ignoreQueryPrefix: true,
-        });
-        $("#RoomName").text(room);
-        const username = Cookies.get("username");
-
-        // Socket IO
-        const socket = io();
-
-        // Join Room
-        socket.emit("joinRoom", {
-            username,
-            room,
-        });
-
-        // Message from Server
-        socket.on("message", (msg) => {
-            printMessage(msg);
-            $("#chatMessages").scrollTop(document.getElementById("chatMessages").scrollHeight);
-        });
-
-        // Message Submit
-        $("#chatForm").on("submit", function (e) {
-            e.preventDefault();
-            const msg = $("#message").val();
-            socket.emit("chatMessage", msg); // Emit Message
-            $("#message").val("").focus(); // Clear the Input
-        });
-
-        // Get Room Users
-        socket.on("roomUsers", ({ room, users }) => {
-            $("#RoomUsers").html("");
-            $.each(users, (i, user) => {
-                $("#RoomUsers").append(`<div class="text-muted">${user.username}</div>`);
-            });
-        });
-
-        // Design
-        function printMessage(msg) {
-            let el = "";
-            if (msg.username == username) {
-                el = `<div class="border p-2 rounded bg-secondary text-white mt-3 w-75 float-end">
-                <small class="text-white">${msg.username} - ${msg.time}</small>
-                <div>${msg.text}</div>
-            </div>`;
-            } else {
-                el = `<div class="border p-2 rounded bg-light mt-3 w-75 float-start">
-                <small class="text-muted">${msg.username} - ${msg.time}</small>
-                <div>${msg.text}</div>
-            </div>`;
+        const client = io()
+            const currentUser = localStorage.getItem('username')
+            const tag = document.getElementById('room')
+            const roomName = tag.options[tag.selectedIndex].value
+            function joinRoom(){
+                
+                document.getElementById('roomName').innerHTML = roomName
             }
-
-            $("#chatMessages").append(el);
-        }
+            function leaveRoom(){
+                document.getElementById('roomName').innerHTML = ""
+            }
+            function signout(){
+                localStorage.clear()
+                window.location.href = "http://localhost:3000/signin"
+            }
+            client.on('roomMessage',(message)=>{
+                document.getElementById('messages').innerHTML += `<li>${message.user} : ${message.message}</li>`
+            })
+            function sendMessage(){
+                const msg ={user: currentUser,
+                            message: document.getElementById('message').value,
+                            roomName}
+                client.emit('messages',msg)
+                document.getElementById('messages').innerHTML += `<li>${msg.user} : ${msg.message}</li>`
+            }
     </script>
 
 </body>
