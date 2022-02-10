@@ -42,8 +42,8 @@
     <div class="container row py-4 my-4">
         <div class="col-sm mx-5"></div>
         <div class="col-sm px-5 mx-5">
-            <h3 class="text-center">Select the Room you would like to chat in!1</h3>
-            <form>
+            <h3 class="text-center">Select the Room you would like to chat in!</h3>
+            <form action="/room" method="GET">
                 <div class="form-group p-3">
                     <label for="username">Username</label>
                     <input type="text" class="form-control" id="username" name="username" value="<%= username %>" readonly>
@@ -51,7 +51,7 @@
                 <div class="form-group p-3">
                     <label for="roomSelect">Select Room</label>
                     <select class="form-control" id="roomSelect" name="roomSelect" required>
-                        <option selected>Choose</option>
+                        <option selected>Choose a room</option>
                         <option value="news">News</option>
                         <option value="covid19">COVID19</option>
                         <option value="nodejs">NodeJS</option>
@@ -61,7 +61,7 @@
                     </select>
                 </div>
                 <br>
-                <button type="submit" class="btn btn-primary mx-4">SIGN IN</button>
+                <button type="submit" class="btn btn-primary mx-4">Let's Go!</button>
             </form>
         </div>
         <div class="col-sm"></div>
